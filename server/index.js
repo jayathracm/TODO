@@ -36,11 +36,13 @@ const openDb = () => {
 app.post('/new', (req, res) => {
     const pool = openDb();
 
-    pool.query("INSERT INTO task (description) VALUES ($1)",
+    pool.query("INSERT INTO task (description) VALUES ($1) returning *",
      [req.body.description], (error, result) => {
-        if(error) {
+        if (error) {
+            console.error('Error executing query:', error);
             res.status(500).json({error: error.message});
         } else {
+            console.log('Query result:', result);
             res.status(201).json({id : result.rows[0].id});
         }
     });
